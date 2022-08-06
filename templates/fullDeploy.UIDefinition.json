@@ -1,0 +1,466 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+	"view": {
+		"kind": "Form",
+		"properties": {
+			"title": "Twitch live notifications",
+			"steps": [
+				{
+					"name": "basics",
+					"label": "Basics",
+					"elements": [
+						{
+							"name": "resourceScope",
+							"type": "Microsoft.Common.ResourceScope",
+							"location": {
+								"resourceTypes": [
+									"microsoft.resources/resourcegroups"
+								]
+							}
+						},
+						{
+							"name": "getRGs",
+							"type": "Microsoft.Solutions.ArmApiControl",
+							"request": {
+								"method": "GET",
+								"path": "[concat(steps('basics').resourceScope.subscription.id,'/resourcegroups?api-version=2021-04-01')]"
+							}
+						},
+						{
+							"name": "createAppRG",
+							"type": "Microsoft.Common.CheckBox",
+							"label": "Create new resource group for function app.",
+							"constraints": {
+								"required": false,
+								"validationMessage": ""
+							}
+						},
+						{
+							"name": "appRGDropDown",
+							"type": "Microsoft.Common.DropDown",
+							"label": "Function App resource group",
+							"toolTip": "Select an existing resource group for the function app or enter a name to create a new.",
+							"placeholder": "Select existing resource group",
+							"constraints": {
+								"allowedValues": "[map(steps('basics').getRGs.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]"
+							},
+							"visible": "[not(steps('basics').createAppRG.value)]"
+						},
+						{
+							"name": "appRGTextBox",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Create new resource group",
+							"placeholder": "Choose name for new resource group",
+							"defaultValue": "",
+							"toolTip": "Use only allowed characters",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": "[steps('basics').createAppRG.value]"
+						},
+						{
+							"name": "functionAppName",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Function App Name",
+							"defaultValue": "",
+							"toolTip": "Globally unique name for function app.",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						},
+						{
+							"name": "storageAccountSku",
+							"type": "Microsoft.Common.DropDown",
+							"label": "Storage Account Sku",
+							"defaultValue": "Standard_LRS",
+							"toolTip": "Storage account SKU",
+							"constraints": {
+								"required": false,
+								"allowedValues": [
+									{
+										"label": "Standard_LRS",
+										"value": "Standard_LRS"
+									},
+									{
+										"label": "Standard_GRS",
+										"value": "Standard_GRS"
+									},
+									{
+										"label": "Standard_RAGRS",
+										"value": "Standard_RAGRS"
+									},
+									{
+										"label": "Standard_ZRS",
+										"value": "Standard_ZRS"
+									},
+									{
+										"label": "Premium_LRS",
+										"value": "Premium_LRS"
+									},
+									{
+										"label": "Premium_ZRS",
+										"value": "Premium_ZRS"
+									},
+									{
+										"label": "Standard_GZRS",
+										"value": "Standard_GZRS"
+									},
+									{
+										"label": "Standard_RAGZRS",
+										"value": "Standard_RAGZRS"
+									}
+								]
+							},
+							"visible": true
+						},
+						{
+							"name": "createKVRG",
+							"type": "Microsoft.Common.CheckBox",
+							"label": "Create new resource group for key vault.",
+							"constraints": {
+								"required": false,
+								"validationMessage": ""
+							}
+						},
+						{
+							"name": "KVRGDropDown",
+							"type": "Microsoft.Common.DropDown",
+							"label": "Key vault resource group",
+							"toolTip": "Select an existing resource group for the key vault or enter a name to create a new.",
+							"placeholder": "Select existing resource group",
+							"constraints": {
+								"allowedValues": "[map(steps('basics').getRGs.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]"
+							},
+							"visible": "[not(steps('basics').createKVRG.value)]"
+						},
+						{
+							"name": "KVRGTextBox",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Create new resource group",
+							"placeholder": "Choose name for new resource group",
+							"defaultValue": "",
+							"toolTip": "Use only allowed characters",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": "[steps('basics').createKVRG.value]"
+						},
+						{
+							"name": "keyVaultName",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Key Vault Name",
+							"defaultValue": "",
+							"toolTip": "Name of key vault used to store secrets like access tokens to Twitch, Twitter and Discord.",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						},
+						{
+							"name": "tags",
+							"type": "Microsoft.Common.TagsByResource",
+							"resources": [
+								"ALL"
+							]
+						}
+					]
+				},
+				{
+					"name": "config",
+					"label": "App Configuration",
+					"elements": [
+						{
+							"name": "dailyMemoryTimeQuota",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Daily Memory Time Quota",
+							"defaultValue": "60000",
+							"toolTip": "Quota of GB-seconds that can be used each day.",
+							"constraints": {
+								"required": false,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						},
+						{
+							"name": "version",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Version",
+							"defaultValue": "latest",
+							"toolTip": "Version of TwitchLiveNotification to deploy, use full tag name like v1.0.1 or 'latest' for latest release.",
+							"constraints": {
+								"required": false,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						},
+						{
+							"name": "adminPrincipalId",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Admin Principal Id",
+							"defaultValue": "",
+							"toolTip": "PrincipalId of identity that will be granted access to deploy code and manage secrets. Usually the principalId (guid) of deploying user.",
+							"constraints": {
+								"required": false,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						},
+						{
+							"name": "adminPrincipalType",
+							"type": "Microsoft.Common.DropDown",
+							"label": "Admin Principal Type",
+							"defaultValue": "User",
+							"toolTip": "PrincipalType of identity that will be granted access to deploy code",
+							"constraints": {
+								"required": false,
+								"allowedValues": [
+									{
+										"label": "Device",
+										"value": "Device"
+									},
+									{
+										"label": "ForeignGroup",
+										"value": "ForeignGroup"
+									},
+									{
+										"label": "Group",
+										"value": "Group"
+									},
+									{
+										"label": "ServicePrincipal",
+										"value": "ServicePrincipal"
+									},
+									{
+										"label": "User",
+										"value": "User"
+									}
+								]
+							},
+							"visible": true
+						},
+						{
+							"name": "discordTemplateOnStreamOnline",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Template for Stream Online announcements to Discord",
+							"defaultValue": "Live now on Twitch!{newline}{streamer} is streaming \"{title}\" in \"{gamename}\"{newline}{newline}Join them live at: {streamUri}{newline}",
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						},
+						{
+							"name": "twitterTemplateOnStreamOnline",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Twitter Template On Stream Online",
+							"defaultValue": "Live now on Twitch!{newline}{newline}{streamer} is streaming \"{title}\" in \"{gamename}\"{newline}{newline}Join them live at: {streamUri}{newline}{newline}",
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"visible": true
+						}
+					]
+				},
+				{
+					"name": "secrets",
+					"label": "Tokens and Secrets",
+					"elements": [
+						{
+							"name": "discordWebhookUri",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Discord Webhook Uri",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitchClientId",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitch Client Id",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitchClientSecret",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitch Client Secret",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitchSignatureSecret",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitch Signature Secret",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitterConsumerKey",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitter Consumer Key",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitterConsumerSecret",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitter Consumer Secret",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitterAccessToken",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitter Access Token",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						},
+						{
+							"name": "twitterAccessTokenSecret",
+							"type": "Microsoft.Common.PasswordBox",
+							"label": {
+								"password": "Twitter Access Token Secret",
+								"confirmPassword": "Confirm password"
+							},
+							"toolTip": "",
+							"constraints": {
+								"required": true,
+								"regex": "",
+								"validationMessage": ""
+							},
+							"options": {
+								"hideConfirmation": true
+							},
+							"visible": true
+						}
+					]
+				}
+			]
+		},
+		"outputs": {
+			"parameters": {
+				"functionAppName": "[steps('basics').functionAppName]",
+				"functionAppResourceGroupName": "[if(steps('basics').createAppRG.value,steps('basics').appRGTextBox.value,steps('basics').appRGDropDown.value)]",
+				"functionAppSubscriptionId": "[steps('basics').resourceScope.subscription.id]",
+				"version": "[steps('config').version]",
+				"keyVaultName": "[steps('basics').keyVaultName]",
+				"keyVaultResourceGroupName": "[if(steps('basics').createKVRG.value,steps('basics').KVRGTextBox.value,steps('basics').KVRGDropDown.value)]",
+				"keyVaultSubscriptionId": "[steps('basics').resourceScope.subscription.id]",
+				"discordTemplateOnFollow": "",
+				"discordTemplateOnStreamOnline": "[steps('config').discordTemplateOnStreamOnline]",
+				"twitterTemplateOnFollow": "",
+				"twitterTemplateOnStreamOnline": "[steps('config').twitterTemplateOnStreamOnline]",
+				"discordWebhookUri": "[steps('secrets').discordWebhookUri]",
+				"twitchClientId": "[steps('secrets').twitchClientId]",
+				"twitchClientSecret": "[steps('secrets').twitchClientSecret]",
+				"twitchSignatureSecret": "[steps('secrets').twitchSignatureSecret]",
+				"twitterConsumerKey": "[steps('secrets').twitterConsumerKey]",
+				"twitterConsumerSecret": "[steps('secrets').twitterConsumerSecret]",
+				"twitterAccessToken": "[steps('secrets').twitterAccessToken]",
+				"twitterAccessTokenSecret": "[steps('secrets').twitterAccessTokenSecret]",
+				"storageAccountSku": "[steps('basics').storageAccountSku]",
+				"adminPrincipalId": "[steps('config').adminPrincipalId]",
+				"adminPrincipalType": "[steps('config').adminPrincipalType]",
+				"dailyMemoryTimeQuota": "[steps('config').dailyMemoryTimeQuota]",
+				"location": "[steps('basics').resourceScope.location.name]",
+				"tags": "[steps('basics').tags.ALL"
+			},
+			"kind": "Subscription",
+			"location": "[steps('basics').resourceScope.location.name]",
+			"subscriptionId": "[steps('basics').resourceScope.subscription.id]"
+		}
+	}
+}

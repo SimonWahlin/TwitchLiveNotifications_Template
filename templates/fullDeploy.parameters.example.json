@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "functionAppName": {
+      "value": "<yourvalue>"
+    },
+    "functionAppResourceGroupName": {
+      "value": "<yourvalue>"
+    },
+    "keyVaultName": {
+      "value": "<yourvalue>"
+    },
+    "keyVaultResourceGroupName": {
+      "value": "<yourvalue>"
+    },
+    "DiscordWebhookUri": {
+      "value": "<yourvalue>"
+    },
+    "TwitchClientId": {
+      "value": "<yourvalue>"
+    },
+    "TwitchClientSecret": {
+      "value": "<yourvalue>"
+    },
+    "TwitchSignatureSecret": {
+      "value": "<yourvalue>"
+    },
+    "TwitterConsumerKey": {
+      "value": "<yourvalue>"
+    },
+    "TwitterConsumerSecret": {
+      "value": "<yourvalue>"
+    },
+    "TwitterAccessToken": {
+      "value": "<yourvalue>"
+    },
+    "TwitterAccessTokenSecret": {
+      "value": "<yourvalue>"
+    },
+    "adminPrincipalId": {
+      "value": "<yourvalue>"
+    },
+    "version": {
+        "value": "latest"
+    },
+    "storageAccountSku": {
+        "value": "Standard_LRS"
+    },
+    "adminPrincipalType": {
+        "value": "User"
+    },
+    "dailyMemoryTimeQuota": {
+        "value": 60000
+    },
+    "location": {
+        "value": "<yourvalue>"
+    },
+    "tags": {
+        "value": {}
+    }
+  }
+}
