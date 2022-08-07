@@ -164,13 +164,6 @@
 								"validationMessage": ""
 							},
 							"visible": true
-						},
-						{
-							"name": "tags",
-							"type": "Microsoft.Common.TagsByResource",
-							"resources": [
-								"ALL"
-							]
 						}
 					]
 				},
@@ -453,8 +446,7 @@
 				"adminPrincipalId": "[steps('config').adminPrincipalId]",
 				"adminPrincipalType": "[steps('config').adminPrincipalType]",
 				"dailyMemoryTimeQuota": "[steps('config').dailyMemoryTimeQuota]",
-				"location": "[steps('basics').resourceScope.location.name]",
-				"tags": "[steps('basics').tags.ALL"
+				"location": "[steps('basics').resourceScope.location.name]"
 			},
 			"kind": "Subscription",
 			"location": "[steps('basics').resourceScope.location.name]",
