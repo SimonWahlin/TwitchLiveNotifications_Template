@@ -15,9 +15,7 @@ param keyVaultResourceGroupName string
 @description('SubscriptionId where key vault will be created, leave empty to use current subscription.')
 param keyVaultSubscriptionId string = subscription().subscriptionId
 
-param discordTemplateOnFollow string
 param discordTemplateOnStreamOnline string
-param twitterTemplateOnFollow string
 param twitterTemplateOnStreamOnline string
 
 @secure()
@@ -366,7 +364,6 @@ module functionAppSettings 'modules/functionApp-appSettings.bicep' = {
       StorageTableConnection__tableServiceUri: 'https://${storageAccountName}.table.${environment().suffixes.storage}/'
       Twitch_CallbackUrl: 'https://${functionApp.outputs.defaultHostName}/api/SubscriptionCallBack'
       DISABLE_NOTIFICATIONS: 'false'
-      DiscordTemplateOnFollow: discordTemplateOnFollow
       DiscordTemplateOnStreamOnline: discordTemplateOnStreamOnline
       DiscordWebhookUri: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=DiscordWebhookUri)'
       queueAddSubscription: 'addsubscription'
@@ -383,7 +380,6 @@ module functionAppSettings 'modules/functionApp-appSettings.bicep' = {
       TwitterConsumerSecret: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=TwitterConsumerSecret)'
       TwitterAccessToken: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=TwitterAccessToken)'
       TwitterAccessTokenSecret: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=TwitterAccessTokenSecret)'
-      TwitterTemplateOnFollow: twitterTemplateOnFollow
       TwitterTemplateOnStreamOnline: twitterTemplateOnStreamOnline
     }
     appInsightsResourceId: appInsights.outputs.id

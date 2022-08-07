@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.9.1.41621",
-      "templateHash": "1981235160991225087"
+      "templateHash": "2023491396157964092"
     }
   },
   "parameters": {
@@ -48,13 +48,7 @@
         "description": "SubscriptionId where key vault will be created, leave empty to use current subscription."
       }
     },
-    "discordTemplateOnFollow": {
-      "type": "string"
-    },
     "discordTemplateOnStreamOnline": {
-      "type": "string"
-    },
-    "twitterTemplateOnFollow": {
       "type": "string"
     },
     "twitterTemplateOnStreamOnline": {
@@ -1992,7 +1986,6 @@
               "StorageTableConnection__tableServiceUri": "[format('https://{0}.table.{1}/', variables('storageAccountName'), environment().suffixes.storage)]",
               "Twitch_CallbackUrl": "[format('https://{0}/api/SubscriptionCallBack', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('functionAppSubscriptionId'), parameters('functionAppResourceGroupName')), 'Microsoft.Resources/deployments', parameters('functionAppName'))).outputs.defaultHostName.value)]",
               "DISABLE_NOTIFICATIONS": "false",
-              "DiscordTemplateOnFollow": "[parameters('discordTemplateOnFollow')]",
               "DiscordTemplateOnStreamOnline": "[parameters('discordTemplateOnStreamOnline')]",
               "DiscordWebhookUri": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=DiscordWebhookUri)', parameters('keyVaultName'))]",
               "queueAddSubscription": "addsubscription",
@@ -2009,7 +2002,6 @@
               "TwitterConsumerSecret": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=TwitterConsumerSecret)', parameters('keyVaultName'))]",
               "TwitterAccessToken": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=TwitterAccessToken)', parameters('keyVaultName'))]",
               "TwitterAccessTokenSecret": "[format('@Microsoft.KeyVault(VaultName={0};SecretName=TwitterAccessTokenSecret)', parameters('keyVaultName'))]",
-              "TwitterTemplateOnFollow": "[parameters('twitterTemplateOnFollow')]",
               "TwitterTemplateOnStreamOnline": "[parameters('twitterTemplateOnStreamOnline')]"
             }
           },
