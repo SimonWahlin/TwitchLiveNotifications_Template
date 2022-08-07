@@ -198,6 +198,18 @@
 							"visible": true
 						},
 						{
+							"name": "findPrincipalIdText",
+							"type": "Microsoft.Common.TextBlock",
+							"visible": true,
+							"options": {
+								"text": "To find your own principal id, use Graph Explorer or run the following command in Azure PowerShell after signing in with Connect-AzAccount: \"Get-AzADUser -UserPrincipalName (Get-AzContext).Account.Id | Select-Object -ExpandProperty Id\"",
+								"link": {
+									"label": "Learn more",
+									"uri": "https://docs.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http#example-2-signed-in-user-request"
+								}
+							}
+						},
+						{
 							"name": "adminPrincipalId",
 							"type": "Microsoft.Common.TextBox",
 							"label": "Admin Principal Id",
@@ -282,7 +294,7 @@
 								"password": "Discord Webhook Uri",
 								"confirmPassword": "Confirm password"
 							},
-							"toolTip": "",
+							"toolTip": "Webhook from Discord to send messages to.",
 							"constraints": {
 								"required": true,
 								"regex": "",
@@ -336,7 +348,7 @@
 								"password": "Twitch Signature Secret",
 								"confirmPassword": "Confirm password"
 							},
-							"toolTip": "",
+							"toolTip": "This is a random string that will be sent to Twitch and used to validate callback requests.",
 							"constraints": {
 								"required": true,
 								"regex": "",
