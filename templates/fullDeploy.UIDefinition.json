@@ -439,11 +439,11 @@
 			"parameters": {
 				"functionAppName": "[steps('basics').functionAppName]",
 				"functionAppResourceGroupName": "[if(steps('basics').createAppRG.value,steps('basics').appRGTextBox.value,steps('basics').appRGDropDown.value)]",
-				"functionAppSubscriptionId": "[steps('basics').resourceScope.subscription.id]",
+				"functionAppSubscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
 				"version": "[steps('config').version]",
 				"keyVaultName": "[steps('basics').keyVaultName]",
 				"keyVaultResourceGroupName": "[if(steps('basics').createKVRG.value,steps('basics').KVRGTextBox.value,steps('basics').KVRGDropDown.value)]",
-				"keyVaultSubscriptionId": "[steps('basics').resourceScope.subscription.id]",
+				"keyVaultSubscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
 				"discordTemplateOnStreamOnline": "[steps('config').discordTemplateOnStreamOnline]",
 				"twitterTemplateOnStreamOnline": "[steps('config').twitterTemplateOnStreamOnline]",
 				"discordWebhookUri": "[steps('secrets').discordWebhookUri]",
